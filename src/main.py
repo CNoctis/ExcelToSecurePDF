@@ -6,7 +6,7 @@ import os
 
 def main():
     # Procesamos el archivo .xlsx
-    data = process_xlsx("input/excel_example.xlsx")
+    data = process_xlsx("input/comunicacion_mayo.xlsx")
 
     # Separamos el df por rut
     ruts = data["RUT"].unique()
@@ -26,9 +26,6 @@ def main():
         data_intereses_reajustes = df["INTERES_PC"].tolist()
         data_monto_actualizado = df["MONTO_ACT_PC"].tolist()
 
-        print(data_fecha_pago)
-        print(type(data_fecha_pago))
-
         table_data = [
             ["Fecha Pago", "Monto nominal", "Intereses y reajustes", "Monto actualizado"]
             ]
@@ -40,7 +37,7 @@ def main():
                                str(data_monto_actualizado[i])])
 
         # Reemplazamos los valores en el archivo .docx
-        doc = replace_text("template/doc_template.docx", replacements)
+        doc = replace_text("template/Doc_Tipo.docx", replacements)
 
         # Creamos la tabla con los datos del df
         doc = create_table_at_placeholder(doc, table_data, "{tabla}")
