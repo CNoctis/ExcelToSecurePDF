@@ -1,11 +1,24 @@
 import pandas as pd
 import os
 from modulos.process_docx import create_table_at_placeholder, replace_text, save_docx
+from typing import Union
 from modulos.process_pdf import encrypt_pdf
 from docx2pdf import convert
 
-def read_and_combine_excel_files(input_folder):
-   
+def read_and_save_excel_to_list_df(input_folder: str)-> str:
+    """
+    Lee todos los archivos Excel (.xlsx y .xls) en una carpeta.
+
+    Esta función busca en el directorio especificado todos los archivos con extensiones .xlsx o .xls, 
+    los lee como DataFrames usando la biblioteca `pandas`.
+
+    :param input_folder: Ruta al directorio que contiene los archivos Excel. Debe ser una ruta válida en el sistema de archivos.
+    
+    :return: Un DataFrame de pandas que contiene los datos combinados de todos los archivos Excel leídos.
+
+    :raises FileNotFoundError: Si el directorio especificado no existe.
+    :raises ValueError: Si no se encuentran archivos Excel en el directorio.
+    """
     if not os.path.exists(input_folder):
         raise FileNotFoundError(f"La carpeta {input_folder} no existe.")
     
@@ -26,7 +39,7 @@ def read_and_combine_excel_files(input_folder):
     
     return all_data
 
-def format_currency(value):
+def format_currency(value: Union[int, float]) -> str:
     """
     Formatea el valor como moneda en formato decimal con el signo '$'.
     Elimina los centavos si son cero.
@@ -44,8 +57,8 @@ def format_currency(value):
     return formatted
 
 def main():
-    input_folder = 'C:/Users/Usuario/Desktop/GITHUB2/ExcelToSecurePDF/input'
-    data = read_and_combine_excel_files(input_folder)
+    input_folder = 'C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/input'
+    data = read_and_save_excel_to_list_df(input_folder)
 
     # Separamos el df por rut
     ruts = data["RUT"].unique()
@@ -112,24 +125,24 @@ def main():
             ])
 
         # Reemplazamos los valores en el archivo .docx
-        doc = replace_text("ExcelToSecurePDF/template/doc_template.docx", replacements)
+        doc = replace_text("C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/template/doc_template.docx", replacements)
 
         # Creamos la tabla con los datos del df
         doc = create_table_at_placeholder(doc, table_data, "{tabla}")
 
         # Guardamos el archivo .docx
-        save_docx(doc, f"ExcelToSecurePDF/output/{rut}.docx")
+        save_docx(doc, f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.docx")
 
         # Convertimos el .docx a .pdf
-        convert(f"ExcelToSecurePDF/output/{rut}.docx", f"ExcelToSecurePDF/output/{rut}.pdf")
+        convert(f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.docx", f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.pdf")
 
         # Borramos el .docx
-        os.remove(f"ExcelToSecurePDF/output/{rut}.docx")
+        os.remove(f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.docx")
 
         password = rut.split("-")[0].replace(".", "")
 
         # Encryptamos el pdf
-        encrypt_pdf(f"ExcelToSecurePDF/output/{rut}.pdf", password)
+        encrypt_pdf(f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.pdf", password)
 
 if __name__ == "__main__":
     main()
