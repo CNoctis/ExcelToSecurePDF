@@ -57,7 +57,7 @@ def format_currency(value: Union[int, float]) -> str:
     return formatted
 
 def main():
-    input_folder = 'C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/input'
+    input_folder = 'ExcelToSecurePDF/input'
     data = read_and_save_excel_to_list_df(input_folder)
 
     # Separamos el df por rut
@@ -125,24 +125,24 @@ def main():
             ])
 
         # Reemplazamos los valores en el archivo .docx
-        doc = replace_text("C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/template/doc_template.docx", replacements)
+        doc = replace_text("ExcelToSecurePDF/template/doc_template.docx", replacements)
 
         # Creamos la tabla con los datos del df
         doc = create_table_at_placeholder(doc, table_data, "{tabla}")
 
         # Guardamos el archivo .docx
-        save_docx(doc, f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.docx")
+        save_docx(doc, f"ExcelToSecurePDF/output/{rut}.docx")
 
         # Convertimos el .docx a .pdf
-        convert(f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.docx", f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.pdf")
+        convert(f"ExcelToSecurePDF/output/{rut}.docx", f"ExcelToSecurePDF/output/{rut}.pdf")
 
         # Borramos el .docx
-        os.remove(f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.docx")
+        os.remove(f"ExcelToSecurePDF/output/{rut}.docx")
 
         password = rut.split("-")[0].replace(".", "")
 
         # Encryptamos el pdf
-        encrypt_pdf(f"C:/Users/Usuario/Desktop/OpenServices/ExcelToSecurePDF/output/{rut}.pdf", password)
+        encrypt_pdf(f"ExcelToSecurePDF/output/{rut}.pdf", password)
 
 if __name__ == "__main__":
     main()
