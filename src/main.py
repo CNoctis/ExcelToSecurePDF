@@ -1,11 +1,24 @@
 import pandas as pd
 import os
 from modulos.process_docx import create_table_at_placeholder, replace_text, save_docx
+from typing import Union
 from modulos.process_pdf import encrypt_pdf
 from docx2pdf import convert
 
-def read_and_combine_excel_files(input_folder):
-   
+def read_and_save_excel_to_list_df(input_folder: str)-> str:
+    """
+    Lee todos los archivos Excel (.xlsx y .xls) en una carpeta.
+
+    Esta función busca en el directorio especificado todos los archivos con extensiones .xlsx o .xls, 
+    los lee como DataFrames usando la biblioteca `pandas`.
+
+    :param input_folder: Ruta al directorio que contiene los archivos Excel. Debe ser una ruta válida en el sistema de archivos.
+    
+    :return: Un DataFrame de pandas que contiene los datos combinados de todos los archivos Excel leídos.
+
+    :raises FileNotFoundError: Si el directorio especificado no existe.
+    :raises ValueError: Si no se encuentran archivos Excel en el directorio.
+    """
     if not os.path.exists(input_folder):
         raise FileNotFoundError(f"La carpeta {input_folder} no existe.")
     
@@ -26,7 +39,7 @@ def read_and_combine_excel_files(input_folder):
     
     return all_data
 
-def format_currency(value):
+def format_currency(value: Union[int, float]) -> str:
     """
     Formatea el valor como moneda en formato decimal con el signo '$'.
     Elimina los centavos si son cero.
@@ -44,8 +57,8 @@ def format_currency(value):
     return formatted
 
 def main():
-    input_folder = 'C:/Users/Usuario/Desktop/GITHUB2/ExcelToSecurePDF/input'
-    data = read_and_combine_excel_files(input_folder)
+    input_folder = 'ExcelToSecurePDF/input'
+    data = read_and_save_excel_to_list_df(input_folder)
 
     # Separamos el df por rut
     ruts = data["RUT"].unique()
